@@ -1,2 +1,31 @@
 # StopFix
-Detects and blocks malicious clipboard content (PowerShell, mshta, etc.) on any page, with user alerts.
+
+**StopFix** is a browser extension designed to detect and block clipboard-based attacks such as *FileFix*, *ClickFix*, and similar malicious payloads. It works on any web page—including iframes—and alerts the user when suspicious content is copied to the clipboard. Users can review the content and choose to either ignore it or safely clear the clipboard.
+
+## Features
+
+- Detects suspicious clipboard activity triggered by web pages or iframes.
+- Identifies PowerShell, mshta, msiexec, rundll32, regsvr32, and other common attack vectors.
+- User-friendly modal warning with options to ignore or clear the clipboard.
+- Site-agnostic: works across all domains without requiring page-specific integration.
+
+## Installation (for development/testing)
+
+1. Clone or download this repository.
+2. Open Chrome and navigate to `chrome://extensions/`.
+3. Enable **Developer mode** in the top right corner.
+4. Click **Load unpacked** and select the folder of this project.
+
+## Usage
+
+- When a web page or iframe attempts to copy suspicious content to the clipboard, a modal will appear.
+- Review the copied content in the modal.
+- Choose **Ignore** to keep the clipboard intact, or **Clear** to remove the suspicious content.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request.
+
+## License
+
+MIT License
