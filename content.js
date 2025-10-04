@@ -18,7 +18,7 @@
     // evitar duplicados
     if (document.getElementById('clip-detector-overlay-host')) return;
 
-    // host appended to documentElement (outside body when possible)
+    // host appended to documentElement (outside body when posible)
     const host = document.createElement('div');
     host.id = 'clip-detector-overlay-host';
     host.style.position = 'fixed';
@@ -92,7 +92,6 @@
         try {
             chrome.runtime.sendMessage({ type: 'clip_action', action: 'ignore', text, reason });
         } catch (e) {}
-        // No clipboard operations here — se mantiene lo que haya en el portapapeles
         removeModal();
     });
 
@@ -102,7 +101,6 @@
             if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
                 await navigator.clipboard.writeText('');
             } else {
-                // fallback: copiar cadena vacía mediante textarea + execCommand
                 const ta = document.createElement('textarea');
                 ta.value = '';
                 ta.style.position = 'fixed';
@@ -119,7 +117,6 @@
         removeModal();
     });
 
-    // Click en backdrop solo cierra (NO limpia)
     if (backdrop) backdrop.addEventListener('click', (ev) => {
         if (ev.target === backdrop) removeModal();
     });
@@ -128,7 +125,7 @@
   // =========================
   // Message listener: receive detection requests from page_inject.js
   // =========================
-window.addEventListener('message', function (event) {
+  window.addEventListener('message', function (event) {
     const msg = event.data;
     if (!msg || typeof msg !== 'object') return;
 
@@ -137,18 +134,22 @@ window.addEventListener('message', function (event) {
     if (!msg.text || typeof msg.text !== 'string') return;
 
     // Regexs
-    const URL_OR_IP_RE = /\bhttps?:\/\/[^\s"'`<>]{8,}\b|\b(?:\d{1,3}\.){3}\d{1,3}\b/i;
+    const URL_OR_IP_RE = /\bhttps?:\/\/[^"]{8,}\b|\b(?:\d{1,3}\.){3}\d{1,3}\b/i;
     const FLAGS_OR_INDICATORS_RE = /\b(?:-EncodedCommand\b|-enc\b|-Command\b|\b-?c\b|\b-nop\b|\b-ep\b|\b-NoProfile\b|\b-UseBasicParsing\b|\b-Uri\b|\.ps1\b|\b-join\b|\\x[0-9A-Fa-f]{2}|\\u[0-9A-Fa-f]{4}|[A-Za-z0-9+\/]{40,}=*)/i;
 
     // Keywords que queremos condicionar (si aparecen necesitan un indicador)
-    const KEYWORDS_RE = /\b(?:powershell|mshta|msiexec|rundll32|regsvr32|certutil|iex\b|iwr\b|Invoke-WebRequest\b|Start-?Bits(?:Transfer)?|bitsadmin\b)\b/i;
+    const KEYWORDS_RE = /\b(?:powershell|mshta|msiexec|rundll32|regsvr32|certutil|iex\b|iwr\b|Invoke-WebRequest\b|Start-?Bits(?:Transfer)?|bitsadmin\b|bash\b|curl\b|\/bin\/bash\b)\b/i;
+    const BASH_CURL_RE = /\b(?:bash|\/bin\/bash)\b[^\n]*\bcurl\b/i;
+    const IWR_IEX_RE = /\biwr\b[^\n]*\|\s*iex\b/i;
 
-    // Decide si es sospechoso: keyword + (url/ip OR flags/indicators)
+    // Decide si es sospechoso: keyword + (url/ip OR flags/indicators), o bash+curl, o iwr ...|iex
     const hasKeyword = KEYWORDS_RE.test(msg.text);
     const hasUrlOrIp = URL_OR_IP_RE.test(msg.text);
     const hasIndicator = FLAGS_OR_INDICATORS_RE.test(msg.text);
+    const hasBashCurl = BASH_CURL_RE.test(msg.text);
+    const hasIwrIex = IWR_IEX_RE.test(msg.text);
 
-    const isSuspicious = hasKeyword && (hasUrlOrIp || hasIndicator);
+    const isSuspicious = (hasKeyword && (hasUrlOrIp || hasIndicator)) || hasBashCurl || hasIwrIex;
 
     // Si no es sospechoso, ignorar (reduce FPs como "powershell" suelto)
     if (!isSuspicious) {
@@ -166,6 +167,6 @@ window.addEventListener('message', function (event) {
 
     // Si somos top, mostrar modal
     try { createIsolatedModal({ text: msg.text, reason: msg.reason }); } catch (e) { console.error(e); }
-}, false);
+  }, false);
 
 })();
