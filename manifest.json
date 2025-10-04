@@ -1,0 +1,35 @@
+{
+    "manifest_version": 3,
+    "name": "StopFix",
+    "version": "1.0",
+    "description": "Detecta intentos de copiar comandos maliciosos (como PowerShell, mshta, msiexec, etc.) al portapapeles en páginas de terceros e iframes, mostrando un aviso al usuario y permitiendo limpiar o ignorar el contenido",
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "run_at": "document_start",
+            "all_frames": true,
+            "match_about_blank": true
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["page_inject.js"],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "icons": {
+        "48": "icons/icon48.png"
+    }
+}
