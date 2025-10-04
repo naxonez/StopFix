@@ -5,7 +5,8 @@
 ## Features
 
 - Detects suspicious clipboard activity triggered by web pages or iframes.
-- Identifies PowerShell, mshta, msiexec, rundll32, regsvr32, and other common attack vectors.
+- Identifies PowerShell, mshta, msiexec, rundll32, regsvr32 and other common attack vectors in Windows Systems.
+- Identifies Bash, curl and other common attachs vectors in Apple Systems.
 - User-friendly modal warning with options to ignore or clear the clipboard.
 - Site-agnostic: works across all domains without requiring page-specific integration.
 
