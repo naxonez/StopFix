@@ -2,7 +2,7 @@
 (function () {
     try {
         // Regex más completa para detectar payloads tipo ClickFix/FileFix (centrada en PowerShell + iwr/iex + IPs)
-        const SUSPICIOUS_RE = /\b(?:powershell(?:\.exe)?|\b-?c\b|\b-EncodedCommand\b|\b-enc\b|\b-?Command\b|\biex\b|\biwr\b|\bInvoke-WebRequest\b|\b-Uri\b|\b-UseBasicParsing\b|\|\s*iex\b|\b-join\b|Start-?Bits(?:Transfer)?|bitsadmin\b|mshta\b|msiexec\b|rundll32\b|regsvr32\b|certutil\b)\b|(?:\b(?:\d{1,3}\.){3}\d{1,3}\b)/i;
+        const SUSPICIOUS_RE = /\b(?:powershell(?:\.exe)?|\b-?c\b|\b-EncodedCommand\b|\b-enc\b|\b-?Command\b|\biex\b|\biwr\b|\bInvoke-WebRequest\b|\b-Uri\b|\b-UseBasicParsing\b|\|\s*iex\b|\b-join\b|Start-?Bits(?:Transfer)?|bitsadmin\b|mshta\b|msiexec\b|rundll32\b|regsvr32\b|certutil\b|curl)\b|(?:\b(?:\d{1,3}\.){3}\d{1,3}\b)/i;
 
         function postDetection(text, reason) {
             try {
@@ -19,7 +19,7 @@
                 const origWrite = navigator.clipboard.writeText.bind(navigator.clipboard);
                 navigator.clipboard.writeText = function (text) {
                     try {
-                        if (typeof text === 'string' && SUSPICIOUS_RE.test(text)) {
+                        if (typeof text === 'string' &&     SUSPICIOUS_RE.test(text)) {
                             postDetection(text, 'navigator.clipboard.writeText');
                         }
                     } catch (e) {}
