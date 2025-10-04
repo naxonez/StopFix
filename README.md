@@ -26,6 +26,9 @@
 
 Contributions are welcome! Please fork the repository and submit a pull request.
 
+## Detection Example
+<img width="866" height="390" alt="image" src="https://github.com/user-attachments/assets/94f4a686-9a83-4b73-8e16-d4f1a65cc2b8" />
+
 ## License
 
 MIT License
