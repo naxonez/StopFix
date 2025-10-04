@@ -1,6 +1,6 @@
 # StopFix
 
-**StopFix** is a browser extension designed to detect and block clipboard-based attacks such as *FileFix*, *ClickFix*, and similar malicious payloads. It works on any web page—including iframes—and alerts the user when suspicious content is copied to the clipboard. Users can review the content and choose to either ignore it or safely clear the clipboard.
+**StopFix** is a browser extension designed to detect and report clipboard-based attacks such as *FileFix*, *ClickFix*, and similar malicious payloads. It works on any web page—including iframes—and alerts the user when suspicious content is copied to the clipboard. Users can review the content and choose to either ignore it or safely clear the clipboard.
 
 ## Features
 
